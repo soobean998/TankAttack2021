@@ -48,7 +48,7 @@ public class TankCtrl : MonoBehaviour
             transform.Translate(Vector3.forward * Time.deltaTime * speed * v);
             transform.Rotate(Vector3.up * Time.deltaTime * 100.0f * h);
 
-        //포탄 발사 로직
+            //포탄 발사 로직
             if(Input.GetMouseButtonDown(0))
             {
                pv.RPC("Fire", RpcTarget.AllViaServer, null);
