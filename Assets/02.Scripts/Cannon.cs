@@ -9,7 +9,7 @@ public class Cannon : MonoBehaviour
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
-        rigidbody.AddForce(Vector3.forward * 2000.0f);
+        rigidbody.AddRelativeForce(Vector3.forward * 3000.0f);
     }
 
   

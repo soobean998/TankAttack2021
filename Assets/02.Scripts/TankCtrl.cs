@@ -14,6 +14,8 @@ public class TankCtrl : MonoBehaviour
     public Transform firePos;
     public GameObject cannon;
 
+    public Transform cannonMesh;
+
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +23,6 @@ public class TankCtrl : MonoBehaviour
       
         transform = GetComponent<Transform>();
         pv = GetComponent<PhotonView>();
-
         if(pv.IsMine)
         {
             GetComponent<Rigidbody>().centerOfMass = new Vector3(0, -5.0f, 0);
@@ -46,14 +47,18 @@ public class TankCtrl : MonoBehaviour
             
             transform.Translate(Vector3.forward * Time.deltaTime * speed * v);
             transform.Rotate(Vector3.up * Time.deltaTime * 100.0f * h);
-            
+
+        //포탄 발사 로직
             if(Input.GetMouseButtonDown(0))
             {
-                Fire();
+               pv.RPC("Fire", RpcTarget.AllViaServer, null);
             }
         }
+        //포신 회전 설정
+        float r = Input.GetAxis("Mouse ScrollWheel");
+        cannonMesh.Rotate(Vector3.right * Time.deltaTime * r * 2000.0f);
     }
-
+    [PunRPC]
     void Fire()
     {
         Instantiate(cannon, firePos.position, firePos.rotation);
