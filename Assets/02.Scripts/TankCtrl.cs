@@ -14,6 +14,7 @@ public class TankCtrl : MonoBehaviour
     public Transform firePos;
     public GameObject cannon;
 
+    public TMPro.TMP_Text userIdText;
     public Transform cannonMesh;
 
     public new AudioClip audio;
@@ -27,6 +28,8 @@ public class TankCtrl : MonoBehaviour
         transform = GetComponent<Transform>();
         pv = GetComponent<PhotonView>();
         audioSource = GetComponent<AudioSource>();
+
+        userIdText.text = pv.Owner.NickName;
         if(pv.IsMine)
         {
             GetComponent<Rigidbody>().centerOfMass = new Vector3(0, -5.0f, 0);
@@ -59,8 +62,8 @@ public class TankCtrl : MonoBehaviour
             }
         }
         // //포신 회전 설정
-        // float r = Input.GetAxis("Mouse ScrollWheel");
-        // cannonMesh.Rotate(Vector3.right * Time.deltaTime * r * 2000.0f);
+        float r = Input.GetAxis("Mouse ScrollWheel");
+        cannonMesh.Rotate(Vector3.right * Time.deltaTime * r * 2000.0f);
     }
     [PunRPC]
     void Fire(string shooterName)
@@ -68,6 +71,8 @@ public class TankCtrl : MonoBehaviour
         GameObject _cannon = Instantiate(cannon, firePos.position, firePos.rotation);
         audioSource?.PlayOneShot(audio);
         _cannon.GetComponent<Cannon>().Shooter = shooterName;
+
+        
 
     }
 }

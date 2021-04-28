@@ -12,14 +12,20 @@ public class Cannon : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody>();
         rigidbody.AddRelativeForce(Vector3.forward * 3000.0f);
+        
     
     }
 
     void OnCollisionEnter(Collision coll)
     {
         GameObject obj = Instantiate(ex, transform.position, Quaternion.identity);
-
         Destroy(obj, 3.0f);
+
+        Destroy(this.gameObject);
+
+
+
+
     }
 
   
