@@ -86,7 +86,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
       
     }
-
+#region UI_BUTTON_CALLBACK
     public void OnLoginClick()
     {
         if (string.IsNullOrEmpty(userIdText.text))
@@ -98,4 +98,32 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         PhotonNetwork.NickName = userIdText.text;
         PhotonNetwork.JoinRandomRoom();
     }
+
+    public void OnmakeRoomClick()
+    {
+         // 룸 속성을 설정
+        RoomOptions ro = new RoomOptions();
+        ro.IsOpen = true;
+        ro.IsVisible = true;
+        ro.MaxPlayers = 30;
+
+        if (string.IsNullOrEmpty(roomNameText.text))
+        {
+            roomNameText.text = $"ROOM_{Random.Range(0,100):000}";
+        }
+
+        //룸생성
+        PhotonNetwork.CreateRoom(roomNameText.text, ro);
+    }
+
+    //룸 목록 수신
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        foreach(var room in roomList)
+        {
+            Debug.Log($"room name = {room.Name}, ({room.PlayerCount}/{room.MaxPlayers}");
+        }
+    }
+
+#endregion
 }

@@ -16,6 +16,9 @@ public class TankCtrl : MonoBehaviour
 
     public Transform cannonMesh;
 
+    public new AudioClip audio;
+    private AudioSource audioSource;
+
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +26,7 @@ public class TankCtrl : MonoBehaviour
       
         transform = GetComponent<Transform>();
         pv = GetComponent<PhotonView>();
+        audioSource = GetComponent<AudioSource>();
         if(pv.IsMine)
         {
             GetComponent<Rigidbody>().centerOfMass = new Vector3(0, -5.0f, 0);
@@ -51,16 +55,19 @@ public class TankCtrl : MonoBehaviour
             //포탄 발사 로직
             if(Input.GetMouseButtonDown(0))
             {
-               pv.RPC("Fire", RpcTarget.AllViaServer, null);
+               pv.RPC("Fire", RpcTarget.AllViaServer, pv.Owner.NickName);
             }
         }
-        //포신 회전 설정
-        float r = Input.GetAxis("Mouse ScrollWheel");
-        cannonMesh.Rotate(Vector3.right * Time.deltaTime * r * 2000.0f);
+        // //포신 회전 설정
+        // float r = Input.GetAxis("Mouse ScrollWheel");
+        // cannonMesh.Rotate(Vector3.right * Time.deltaTime * r * 2000.0f);
     }
     [PunRPC]
-    void Fire()
+    void Fire(string shooterName)
     {
-        Instantiate(cannon, firePos.position, firePos.rotation);
+        GameObject _cannon = Instantiate(cannon, firePos.position, firePos.rotation);
+        audioSource?.PlayOneShot(audio);
+        _cannon.GetComponent<Cannon>().Shooter = shooterName;
+
     }
 }
